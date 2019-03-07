@@ -1,0 +1,15 @@
+{%if hasError %} <p><strong><font color="red"> {{hasError}} </font></strong></p> {%endif%}
+<h1>Choisissez un dragon</h1>
+<form method="POST" action="{{url_for('after_form')}}">
+
+<!--<input type="text" name="prenom" placeholder="*Prenom*" />
+<input type="submit" value="Soumettre" />
+
+<h2>OU</h2>
+-->
+<select name="prenom" onchange="this.form.submit()">
+	{% for dragons in liste %}
+	<option value="{{dragons.0}}">{{dragons.0}}</option>
+	{% endfor %}
+</select>
+</form>

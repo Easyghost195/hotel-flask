@@ -1,0 +1,23 @@
+import time
+from flask import *
+import sys
+    
+#NE PAS MODIFIER LA LIGNE SUIVANTE
+app = Flask(__name__)
+     
+#Hello world basique
+@app.route("/")
+def hello():
+    data = "<b>Hello world!</b><br>Python "+str(sys.version)
+    return data
+
+#Hello world avec rÃ©cupÃ©ration de paramÃ¨tres
+@app.route("/hello/<name>")
+def hello_name(name):
+	data= "<b>Hello "+name+"</b>. Nous sommes le " + time.strftime("%d/%m/%Y")
+	return data
+
+
+#NE SURTOUT PAS MODIFIER     
+if __name__ == "__main__":
+   app.run(debug=True)

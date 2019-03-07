@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+{%if hasError %} <p><strong><font color="red"> {{hasError}} </font></strong></p> {%endif%}
+<h1>Choisissez une chambre</h1>
+<form method="POST" action="{{url_for('choix_chambre3')}}">
+<select name=idChambre>
+  {% for chambre in liste %}
+  <option value="{{chambre.0}}">La chambre n°{{chambre.0}} est de {{chambre.1}} €
+  </option>
+  {% endfor %}
+</select>
+<input type="submit" value="Choisir" />
+</form>
+
+<form method="POST" action="{{url_for('accueil')}}">
+<input type="submit" value="Retour accueil" />
+</form>
+
+{% endblock %}

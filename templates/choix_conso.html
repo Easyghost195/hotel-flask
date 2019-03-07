@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+{%if hasError %} <p><strong><font color="red"> {{hasError}} </font></strong></p> {%endif%}
+<h1>Choisissez une consommation</h1>
+<form method="POST" action="{{url_for('test')}}">
+<select name=bar>
+{% for bar in liste %}
+<option>{{bar.0}} pour {{bar.1}} €</option>
+{% endfor %}
+</select>
+<input type="submit" value="Acheter" />
+</form>
+<form method="POST" action="{{url_for('accueil')}}">
+<input type="submit" value="Retour accueil" />
+
+</form>
+{% endblock %}

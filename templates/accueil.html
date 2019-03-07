@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<h1>Choisissez ...</h1>
+{%if hasError %} <p><strong><font color="red"> {{hasError}} </font></strong></p> {%endif%}
+<form method="POST" action="{{url_for('after_accueil')}}">
+	<br>
+	<input type="submit" name="accueil" value="Réserver une chambre">
+	<input type="submit" name="accueil" value="Déclarer une consommation">
+	<input type="submit" name="accueil" value="Payer votre facture">
+	<input type="submit" name="accueil" value="Faire un commentaire">
+</form>
+{% endblock %}

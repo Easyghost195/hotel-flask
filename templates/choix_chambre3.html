@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+{%if hasError %} <p><strong><font color="red"> {{hasError}} </font></strong></p> {%endif%}
+<h1>Reservation de la chambre</h1>
+<div class=chambre_sql>
+  {%if rows %}
+  <ul>
+    <li>Numéro de la chambre : {{rows[0][0]}}</li>
+    <li>Prix de la chambre : {{rows[0][1]}} €</li>
+  </ul>
+  {%endif%}
+</div>
+<form method="POST" action="{{url_for('test')}}">
+  Date début <input type="date" name="date_debut"/><br>
+  Date fin <input type="date" name="date_fin"><br>
+  <input type="submit" value="Soumettre"/>
+</form>
+
+<form method="POST" action="{{url_for('accueil')}}">
+<input type="submit" value="Retour accueil" />
+</form>
+
+{% endblock%}

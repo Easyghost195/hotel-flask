@@ -1,0 +1,19 @@
+<!doctype html>
+<title>Hotel</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<div class=metanav>
+  {% if not session.logged_in %}
+  <a href="{{ url_for('login') }}">Connexion</a>
+  {% else %}
+  <span>Connecté en tant que {{session['nom']}} -</span>
+  <a href="{{ url_for('logout') }}">Déconnexion</a>
+  {% endif %}
+</div>
+<div class=page>
+<section class="content">
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</div>
+</section>

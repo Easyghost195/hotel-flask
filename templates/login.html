@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Connexion</h2>
+{% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <form action="{{ url_for('login') }}" method="POST">
+    <dl>
+    <dt>Username:
+    <dd><input type=text name=mail>
+    <dt>Password:
+    <dd><input type=password name=password>
+    <dd><input type=submit value=Login>
+    </dl>
+  </form>
+
+  <form method="POST" action="{{url_for('accueil')}}">
+  <input type="submit" value="Retour accueil" />
+  </form>
+{% endblock %}

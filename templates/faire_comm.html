@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+{%if hasError %} <p><strong><font color="red"> {{hasError}} </font></strong></p> {%endif%}
+<h1>Faire un commentaire</h1>
+<form method="POST" action="{{url_for('test')}}">
+  <div>
+    <label for="msg">Message :</label>
+    <textarea id="msg" name="user_message"></textarea>
+  </div>
+<input type="submit" value="Soumettre" />
+</form>
+
+<form method="POST" action="{{url_for('accueil')}}">
+<input type="submit" value="Retour accueil" />
+</form>
+{% endblock %}
