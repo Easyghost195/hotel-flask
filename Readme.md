@@ -1,4 +1,3 @@
-cd ~/espaces/www/flask-scripts;
 export FLASK_APP=webapp.py;
 export FLASK_DEBUG=1;
 flask run;

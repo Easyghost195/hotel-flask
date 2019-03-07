@@ -1,0 +1,29 @@
+INSERT INTO HotelBis.Chambre
+  VALUES(DEFAULT,20);
+INSERT INTO HotelBis.Chambre
+  VALUES(DEFAULT,20);
+INSERT INTO HotelBis.Chambre
+  VALUES(DEFAULT,20);
+INSERT INTO HotelBis.Chambre
+  VALUES(DEFAULT,30);
+INSERT INTO HotelBis.Chambre
+  VALUES(DEFAULT,30);
+INSERT INTO HotelBis.Chambre
+  VALUES(DEFAULT,30);
+INSERT INTO HotelBis.Chambre
+  VALUES(DEFAULT,30);
+INSERT INTO HotelBis.Chambre
+  VALUES(DEFAULT,40);
+INSERT INTO HotelBis.Chambre
+  VALUES(DEFAULT,40);
+INSERT INTO HotelBis.Chambre
+  VALUES(DEFAULT,40);
+
+INSERT INTO HotelBis.Bar
+  VALUES('Biere',2);
+INSERT INTO HotelBis.Bar
+  VALUES('Coca',2);
+INSERT INTO HotelBis.Bar
+  VALUES('Pastis',4);
+INSERT INTO HotelBis.Bar
+  VALUES('Whisky',4);

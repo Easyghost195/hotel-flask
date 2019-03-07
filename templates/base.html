@@ -5,9 +5,11 @@
   {% if not session.logged_in %}
   <a href="{{ url_for('login') }}">Connexion</a>
   {% else %}
-  <span>Connecté en tant que {{session['nom']}} -</span>
+  <span>Connecté en tant que {{session['nom']}} |</span>
   <a href="{{ url_for('logout') }}">Déconnexion</a>
   {% endif %}
+  <span>|</span>
+  <a href="{{ url_for('create_account') }}">Nouveau Compte</a>
 </div>
 <div class=page>
 <section class="content">

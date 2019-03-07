@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<h2>Mot de passe administrateur</h2>
+{%if hasError %} <p><strong><font color="red"> {{hasError}} </font></strong></p> {%endif%}
+<form method="POST" action="{{url_for('after_admin')}}">
+  <input type="password" required name="pwdadmin" placeholder="*mdp*"/><br><br>
+  <input type="submit" value="Valider">
+</form>
+{% endblock %}
