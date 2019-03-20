@@ -9,6 +9,7 @@ import datetime
 from datetime import *
 import psycopg2.extras
 from pymongo import *
+
 #NE PAS MODIFIER LA LIGNE SUIVANTE
 app = Flask(__name__)
 
@@ -31,8 +32,11 @@ def accueil(error=None):
 def after_accueil(error=None):
    session['accueil'] = request.form['accueil']
    if not session.get('logged_in'):
-      flash("Vous n'êtes pas connecté")
-      return render_template("accueil.html", session=session, hasError=error)
+        if (session['accueil'] == "Reinitialiser la base"):
+            return render_template("admin.html", hasError=error, session=session)
+        else:
+            flash("Vous n'êtes pas connecté")
+            return render_template("accueil.html", session=session, hasError=error)
    else:
       if (session['accueil'] == "Réserver une chambre"):
          return render_template("choix_chambre.html", session=session, hasError=error, liste=chambre())
@@ -244,6 +248,52 @@ def facture():
 def display_chambre(idChambre):
    rows = select("select * from hotelbis.chambre where idchambre = %s;" % idChambre)
    return rows
+
+
+# MongoDB
+def get_mg_db():
+    db = getattr(g, '_mg_database', None)
+    if db is None:
+        db = g._mg_database = MongoClient("mongodb://mongodb.emi.u-bordeaux.fr:27017").jyclaudel
+    return db
+
+def mgdb_drop_db():
+    mgdb = get_mg_db()
+    # Ce n'est pas obligatoire, mais j'avais choisi deux structures, une pour l'information des chambres et l'autre pour les commentaires.
+    mgdb.chambres.drop()
+    #mgdb.comments.drop()
+
+def mgdb_init_db():
+    creer_mongodb()
+
+def creer_mongodb():
+    mgdb = get_mg_db()
+    result = mgdb.chambres.insert([
+        {
+            "chambre_id": 1,
+            "nom": "Bleue",
+            "étage": 3,
+            "vue": "Ocean",
+            "couchage": "Un grand lit",
+            "salle de bain": {
+                "douche": "Italienne",
+                "baignoire": "à bulles"
+                }
+        },
+        {
+            "chambre_id": 2,
+            "nom": "Verte",
+            "étage": 3,
+            "vue": "Ocean",
+            "couchage": "Un grand lit",
+            "salle de bain": {
+                "douche": "Italienne",
+                "baignoire": "à bulles"
+                }
+        }
+        ]
+    )
+    return result
 
 #NE SURTOUT PAS MODIFIER
 if __name__ == "__main__":
