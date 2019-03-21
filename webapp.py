@@ -16,12 +16,11 @@ app = Flask(__name__)
 app.secret_key = 'azerty'
 USERNAME = 'martin'
 PASSWORD = 'ici.fr'
-
+session = {}
 
 @app.route('/', methods=['GET', 'POST'])
 def accueil(error=None):
    disconnect()
-   session = {}
    session['dateDuJour'] = date.today().isoformat()
    flash('Bienvenue sur le site de l\'Hotel')
    flash('Date du jour : '+session['dateDuJour'])
@@ -41,9 +40,9 @@ def after_accueil(error=None):
       if (session['accueil'] == "Réserver une chambre"):
          return render_template("choix_chambre.html", session=session, hasError=error, liste=chambre())
       elif (session['accueil'] == "Déclarer une consommation"):
-         return render_template("choix_conso.html", hasError=error, session=session, liste=bar())
+         return render_template("choix_conso.html", hasError=error, session=session, liste=bar(), liste_chambre=chambre_in_use())
       elif (session['accueil'] == "Payer votre facture"):
-         return render_template("payer_facture.html", hasError=error, session=session, liste=facture(), registre=client())
+         return render_template("payer_facture.html", hasError=error, session=session, liste=facture_client(), registre=client())
       elif (session['accueil'] == "Faire un commentaire"):
          return render_template("faire_comm.html", hasError=error, session=session)
       elif (session['accueil'] == "Reinitialiser la base"):
@@ -110,7 +109,10 @@ def after_admin(error=None):
     if (request.form['pwdadmin'].strip()=='admin'):
         drop_db()
         init_db()
+        mgdb_init_db()
         flash('Base réinitialisée.')
+        session.pop('logged_in', None)
+        session['idClient'] = []
     else:
         flash('Désolé, mot de passe erroné.')
     return redirect(url_for('accueil'))
@@ -127,6 +129,28 @@ def bravo(error=None):
    #command = "insert into HotelBis.Reservation values(DEFAULT, 1, 3, '2018-11-10', '2018-11-15', FALSE, DEFAULT);"
    #insert(command)
    return render_template("bravo.html", hasError=error, session=session)
+
+@app.route('/paye', methods=['GET', 'POST'])
+def paye(error=None):
+    session['idChambre']=request.form['idChambre']
+    # Modifie la facture du client pour qu'elle soit payée avec la date du jour
+    command = "UPDATE HotelBis.Reservation SET reglee = 'True', date_reglement = '%s' WHERE reservation.idclient=%s AND reservation.idchambre=%s;" % (session['dateDuJour'],session['idClient'], session['idChambre'])
+    #command = "DELETE FROM HotelBis.Reservation WHERE  reservation.idclient=%s AND reservation.idchambre=%s;" % (session['idClient'], session['idChambre'])
+    print(command)
+    rows = insert(command)
+    print(rows)
+    return render_template("bravo.html", hasError=error, session=session)
+
+@app.route('/conso', methods=['GET', 'POST'])
+def conso(error=None):
+    session['idChambre']=request.form['idChambre']
+    session['bar']=request.form['bar']
+    session['quantité']=request.form['quantité']
+    command = "INSERT INTO HotelBis.consommation Values('%s', '%s', '%s', '%s')" % (session['idChambre'], session['dateDuJour'], session['bar'], session['quantité'])
+    print(command)
+    rows = insert(command)
+    print(rows)
+    return render_template("bravo.html", hasError=error, session=session)
 
 @app.route('/test', methods = ['POST'])
 def test():
@@ -165,7 +189,7 @@ def drop_db():
    except Exception as e :
       flash('Désolé, service indisponible actuellement.')
       flash(str(e))
-      return redirect(url_for('accueil.', error=str(e)))
+      return redirect(url_for('accueil', error=str(e)))
 
 
 def init_db():
@@ -184,7 +208,7 @@ def init_db():
      with app.open_resource('hotel_view.sql') as f:
          cur.execute(f.read().decode('utf8'))
      db.commit()
-     with app.open_resource('hotel_insertion.sql') as f:
+     with app.open_resource('hotel_insertion2.sql') as f:
         cur.execute(f.read().decode('utf8'))
      db.commit()
    except Exception as e :
@@ -226,6 +250,11 @@ def chambre():
    rows = select(command)
    return rows
 
+def chambre_in_use():
+    # N'affiche que les chambres utilisées par le client connecté
+   command = "SELECT DISTINCT idchambre FROM hotelbis.reservation WHERE idClient = '%s';" % session['idClient']
+   rows = select(command)
+   return rows
 
 def client():
    command = 'select * from hotelbis.client;'
@@ -243,6 +272,13 @@ def facture():
    command = 'select * from hotelbis.reservation;'
    rows = select(command)
    return rows
+
+def facture_client():
+    # Affiche les factures impayées du client connecté
+    command = "SELECT * FROM hotelbis.reservation WHERE reservation.idclient='%s' AND reservation.date_reglement = '1970-01-01';" % session['idClient']
+    rows = select(command)
+    print(rows)
+    return rows
 
 
 def display_chambre(idChambre):
@@ -268,6 +304,7 @@ def mgdb_init_db():
 
 def creer_mongodb():
     mgdb = get_mg_db()
+    print("Création mongodb")
     result = mgdb.chambres.insert([
         {
             "chambre_id": 1,

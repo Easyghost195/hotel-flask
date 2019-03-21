@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 {%if hasError %} <p><strong><font color="red"> {{hasError}} </font></strong></p> {%endif%}
-<form method="POST" action="{{url_for('test')}}">
+<form method="POST" action="{{url_for('paye')}}">
 <h1>Payez votre facture</h2>
-<select name=facture>
+<select name=idChambre>
   {% for facture in liste %}
-  <option>Facture du client {{facture.1}} de la chambre {{facture.2}} du {{facture.3}} au {{facture.4}}</option>
+  <option value="{{facture.2}}">Facture de la chambre {{facture.2}} du {{facture.3}} au {{facture.4}}</option>
   {% endfor %}
 </select>
 <input type="submit" value="Payer" />

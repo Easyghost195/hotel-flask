@@ -2,12 +2,20 @@
 {% block content %}
 {%if hasError %} <p><strong><font color="red"> {{hasError}} </font></strong></p> {%endif%}
 <h1>Choisissez une consommation</h1>
-<form method="POST" action="{{url_for('test')}}">
+<form method="POST" action="{{url_for('conso')}}">
+
+  <select name=idChambre>
+  {% for chambre in liste_chambre %}
+  <option value="{{chambre.0}}">Chambre {{chambre.0}}</option>
+  {% endfor %}
+  </select>
+
 <select name=bar>
 {% for bar in liste %}
-<option>{{bar.0}} pour {{bar.1}} €</option>
+<option value="{{bar.0}}">{{bar.0}} pour {{bar.1}} €</option>
 {% endfor %}
 </select>
+<input type="text" name="quantité" placeholder="Quantité" required=true />
 <input type="submit" value="Acheter" />
 </form>
 <form method="POST" action="{{url_for('accueil')}}">
