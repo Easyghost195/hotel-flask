@@ -15,7 +15,7 @@
 <option value="{{bar.0}}">{{bar.0}} pour {{bar.1}} €</option>
 {% endfor %}
 </select>
-<input type="text" name="quantité" placeholder="Quantité" required=true />
+<input type="number" name="quantité" placeholder="Quantité" required=true />
 <input type="submit" value="Acheter" />
 </form>
 <form method="POST" action="{{url_for('accueil')}}">

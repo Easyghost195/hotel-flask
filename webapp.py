@@ -155,6 +155,15 @@ def conso(error=None):
     return render_template("bravo.html", hasError=error, session=session)
 
 
+@app.route('/commentaire', methods=['GET', 'POST'])
+def commentaire(error=None):
+    session['idChambre']=request.form['idChambre']
+    session['commentaire']=request.form['commentaire']
+    print(session['commentaire'])
+    insert_comment(session['idChambre'], session['nom'], session['dateDuJour'], session['commentaire'])
+    return render_template("commentaire_done.html", hasError=error, session=session)
+
+
 @app.route('/test', methods = ['POST'])
 def test():
    return render_template('test.html')
@@ -163,7 +172,7 @@ def test():
 @app.route('/choix_chambre3', methods =['GET', 'POST'])
 def choix_chambre3(error=None):
    session['idChambre'] = request.form['idChambre']
-   return render_template("choix_chambre3.html", session=session, desc=mgdb_display_chambre(session['idChambre']), rows=display_chambre(session['idChambre']), hasError=error)
+   return render_template("choix_chambre3.html", session=session, desc=mgdb_display_chambre(session['idChambre']), com=mgdb_display_comments(session['idChambre']), rows=display_chambre(session['idChambre']), hasError=error)
 
 
 def connect():
@@ -298,20 +307,43 @@ def mgdb_display_chambre(idChambre):
     else:
         return None
 
+
+def mgdb_display_comments(idChambre):
+    mgdb = get_mg_db()
+    if mgdb:
+        return mgdb.comments.find({"chambre_id":int(idChambre)})
+    else:
+        return None
+
+
 def get_mg_db():
     db = getattr(g, '_mg_database', None)
     if db is None:
         db = g._mg_database = MongoClient("mongodb://mongodb.emi.u-bordeaux.fr:27017").jyclaudel
     return db
 
+
 def mgdb_drop_db():
     mgdb = get_mg_db()
-    # Ce n'est pas obligatoire, mais j'avais choisi deux structures, une pour l'information des chambres et l'autre pour les commentaires.
     mgdb.chambres.drop()
-    #mgdb.comments.drop()
+    mgdb.comments.drop()
+
 
 def mgdb_init_db():
     creer_mongodb()
+
+def insert_comment(idChambre, nom, jour, commentaire):
+    mgdb = get_mg_db()
+    print(commentaire)
+    result = mgdb.comments.insert(
+        {
+            "chambre_id": int(idChambre),
+            "client_nom": nom,
+            "date": jour,
+            "commentaire": commentaire
+        }
+    )
+    return result
 
 def creer_mongodb():
     mgdb = get_mg_db()

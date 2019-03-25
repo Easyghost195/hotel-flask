@@ -3,10 +3,11 @@
 <br>
 {%if hasError %} <p><strong><font color="red"> {{hasError}} </font></strong></p> {%endif%}
 <h1>Faire un commentaire</h1>
-<form method="POST" action="{{url_for('test')}}">
+<form method="POST" action="{{url_for('commentaire')}}">
+  <input type="number" name="idChambre" placeholder="Chambre" required=true /><br>
   <div>
     <label for="msg">Message :</label>
-    <textarea id="msg" name="user_message"></textarea>
+    <textarea id="msg" name="commentaire"></textarea>
   </div>
 <input type="submit" value="Soumettre" />
 </form>
