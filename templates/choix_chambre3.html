@@ -10,6 +10,14 @@
   </ul>
   {%endif%}
 </div>
+<h1>Decription de la chambre</h1>
+<div>
+  {% if desc %}
+  {% for row in desc %}
+  <p>{{row}}</p>
+  {%endfor%}
+  {%endif%}
+</div>
 <form method="POST" action="{{url_for('bravo')}}">
   Date début <input type="date" name="date_debut"/><br>
   Date fin <input type="date" name="date_fin"><br>

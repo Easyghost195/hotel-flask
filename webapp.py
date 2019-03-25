@@ -109,6 +109,7 @@ def after_admin(error=None):
     if (request.form['pwdadmin'].strip()=='admin'):
         drop_db()
         init_db()
+        mgdb_drop_db()
         mgdb_init_db()
         flash('Base réinitialisée.')
         session.pop('logged_in', None)
@@ -141,6 +142,7 @@ def paye(error=None):
     print(rows)
     return render_template("bravo.html", hasError=error, session=session)
 
+
 @app.route('/conso', methods=['GET', 'POST'])
 def conso(error=None):
     session['idChambre']=request.form['idChambre']
@@ -152,14 +154,16 @@ def conso(error=None):
     print(rows)
     return render_template("bravo.html", hasError=error, session=session)
 
+
 @app.route('/test', methods = ['POST'])
 def test():
    return render_template('test.html')
 
+
 @app.route('/choix_chambre3', methods =['GET', 'POST'])
 def choix_chambre3(error=None):
    session['idChambre'] = request.form['idChambre']
-   return render_template("choix_chambre3.html", session=session, rows=display_chambre(session['idChambre']), hasError=error)
+   return render_template("choix_chambre3.html", session=session, desc=mgdb_display_chambre(session['idChambre']), rows=display_chambre(session['idChambre']), hasError=error)
 
 
 def connect():
@@ -287,6 +291,13 @@ def display_chambre(idChambre):
 
 
 # MongoDB
+def mgdb_display_chambre(idChambre):
+    mgdb = get_mg_db()
+    if mgdb:
+        return mgdb.chambres.find({"chambre_id":int(idChambre)})
+    else:
+        return None
+
 def get_mg_db():
     db = getattr(g, '_mg_database', None)
     if db is None:
@@ -307,8 +318,57 @@ def creer_mongodb():
     print("Création mongodb")
     result = mgdb.chambres.insert([
         {
+            "_id": 1,
             "chambre_id": 1,
             "nom": "Bleue",
+            "étage": 1,
+            "vue": "Ocean",
+            "couchage": "Un grand lit",
+            "salle de bain": {
+                "douche": "Italienne",
+                "baignoire": "à bulles"
+                }
+        },
+        {
+            "_id": 2,
+            "chambre_id": 2,
+            "nom": "Verte",
+            "étage": 1,
+            "vue": "Ocean",
+            "couchage": "Un grand lit",
+            "salle de bain": {
+                "douche": "Italienne",
+                "baignoire": "à bulles"
+                }
+        },
+        {
+            "_id": 3,
+            "chambre_id": 3,
+            "nom": "Rouge",
+            "étage": 2,
+            "vue": "Ocean",
+            "couchage": "Un grand lit",
+            "salle de bain": {
+                "douche": "Italienne",
+                "baignoire": "à bulles"
+                }
+        },
+        {
+            "_id": 4,
+            "chambre_id": 4,
+            "nom": "Beige",
+            "étage": 2,
+            "vue": "Ocean",
+            "couchage": "Un grand lit",
+            "salle de bain": {
+                "douche": "Italienne",
+                "baignoire": "à bulles"
+                }
+        },
+        {
+            "_id": 5,
+            "chambre_id": 5,
+            "nom": "Violet",
             "étage": 3,
             "vue": "Ocean",
             "couchage": "Un grand lit",
@@ -318,10 +378,59 @@ def creer_mongodb():
                 }
         },
         {
-            "chambre_id": 2,
-            "nom": "Verte",
+            "_id": 6,
+            "chambre_id": 6,
+            "nom": "Rose",
             "étage": 3,
+            "vue": "Ville",
+            "couchage": "Un grand lit",
+            "salle de bain": {
+                "douche": "Italienne",
+                "baignoire": "à bulles"
+                }
+        },
+        {
+            "_id": 7,
+            "chambre_id": 7,
+            "nom": "Turquoise",
+            "étage": 4,
             "vue": "Ocean",
+            "couchage": "Un grand lit",
+            "salle de bain": {
+                "douche": "Italienne",
+                "baignoire": "à bulles"
+                }
+        },
+        {
+            "_id": 8,
+            "chambre_id": 8,
+            "nom": "Noire",
+            "étage": 4,
+            "vue": "Ocean",
+            "couchage": "Un grand lit",
+            "salle de bain": {
+                "douche": "Italienne",
+                "baignoire": "à bulles"
+                }
+        },
+        {
+            "_id": 9,
+            "chambre_id": 9,
+            "nom": "Bleu ciel",
+            "étage": 5,
+            "vue": "Ocean",
+            "couchage": "Un grand lit",
+            "salle de bain": {
+                "douche": "Italienne",
+                "baignoire": "à bulles"
+                }
+        },
+        {
+            "_id": 10,
+            "chambre_id": 10,
+            "nom": "Jaune",
+            "étage": 5,
+            "vue": "Au dessus des nuages",
             "couchage": "Un grand lit",
             "salle de bain": {
                 "douche": "Italienne",
