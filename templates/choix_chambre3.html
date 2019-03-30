@@ -10,11 +10,17 @@
   </ul>
   {%endif%}
 </div>
-<h2>Decription de la chambre</h2>
+<h2>Description de la chambre</h2>
 <div>
   {% if desc %}
   {% for row in desc %}
-  <p>{{row}}</p>
+  <p>Chambre {{row['nom']}}</p>
+  <p>{{row['étage']}}° étage</p>
+  <p>Vue sur {{row['vue']}}</p>
+  <p>{{row['couchage']}}</p>
+  <p>Salle de bain :</p>
+  <p>Douche {{row['salle de bain']}}</p>
+  <p>Baignoire {{row['salle de bain']}}</p>
   {%endfor%}
   {%endif%}
 </div>
@@ -23,7 +29,11 @@
   <h2>Commentaires</h2>
   <p>...</p>
   {% for coms in com %}
-  <p>{{coms}}</p>
+  <p>Client: {{coms['client_nom']}}</p>
+  <p>Le {{coms['date']}}</p>
+  <p>Avis sur la chambre:</p>
+  <p>{{coms['commentaire']}}</p>
+  <br>
   {%endfor%}
   {%endif%}
 </div>
